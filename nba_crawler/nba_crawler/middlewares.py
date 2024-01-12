@@ -4,10 +4,12 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
+from scrapy.utils.response import response_status_message
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
-
+from . import proxy
+import random
 
 class NbaCrawlerSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -101,3 +103,36 @@ class NbaCrawlerDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+class RandomUserAgent(object):
+
+    def __init__(self,agents):
+        self.agents = agents
+
+    @classmethod
+    def from_crawler(cls,crawler):
+        return cls(crawler.settings.getlist('USER_AGENTS'))
+
+    def process_request(self,request,spider):
+
+        request.headers.setdefault('User-Agent',random.choice(self.agents))
+
+class ProxyMiddlerware:
+    
+    def process_request(self, request, spider):
+        request.meta['proxy'] = proxy.get_proxy()
+    
+class ProxyRetryMiddleware(RetryMiddleware):
+
+    def process_response(self, request, response, spider):
+        if request.meta.get("dont_retry", False):
+            return response
+        if response.status in self.retry_http_codes:
+            proxy.delete_proxy(request.meta['proxy'])
+            reason = response_status_message(response.status)
+            request.meta['proxy'] = proxy.get_proxy()
+            
+            return self._retry(request, reason, spider) or response
+        return response
+
