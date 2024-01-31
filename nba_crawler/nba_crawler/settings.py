@@ -6,6 +6,7 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import os
 
 BOT_NAME = "nba_crawler"
 
@@ -42,7 +43,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1.5
+DOWNLOAD_DELAY = 2.5
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -82,8 +83,12 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+    # "nba_crawler.pipelines.CleanPipeLine": 299,
 #    "nba_crawler.pipelines.NbaCrawlerPipeline": 300,
-    "nba_crawler.pipelines.SavePipeLine": 300
+    # "nba_crawler.pipelines.SavePipeLine": 300,
+    # "nba_crawler.pipelines.UpdatePipeLine": 310,
+    "nba_crawler.pipelines.RedisPipeLine": 300
+    # "nba_crawler.pipelines.CSVSavePipeLine": 310
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -112,5 +117,15 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
-SQLITE_DB = 'nba2023-24.db'
-RETRY_TIMES = 3
+# SQLITE_DB = 'nba_data.db'
+RETRY_TIMES = 10
+DOWNLOAD_TIMEOUT = 15
+REDIS_URL = 'redis://localhost:6379'
+
+# spider failure URL stored in DATA_DIR
+BASE_PATH = os.path.dirname(__file__)
+DATA_DIR = os.path.join(BASE_PATH, 'errors')
+DEFAULT_PROXY = 'http://127.0.0.1:7890'
+
+if __name__ == '__main__':
+    print(BASE_PATH)

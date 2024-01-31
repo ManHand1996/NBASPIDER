@@ -1,0 +1,6 @@
+PlayerSpiderHis: "parse_player_info() parse list index out of range, https://www.basketball-reference.com/players/m/martisl01.html"
+PlayerSpiderHis: "parse_player_info() parse list index out of range, https://www.basketball-reference.com/players/s/schaufr01.html"
+PlayerSpiderHis: "parse_player_info() parse list index out of range, https://www.basketball-reference.com/players/h/hagancl01.html"
+PlayerSpiderHis: "parse_player_info() parse list index out of range, https://www.basketball-reference.com/players/m/martisl01.html"
+PlayerSpiderHis: "parse_player_info() parse list index out of range, https://www.basketball-reference.com/players/s/schaufr01.html"
+PlayerSpiderHis: "parse_player_info() parse list index out of range, https://www.basketball-reference.com/players/h/hagancl01.html"

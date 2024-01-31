@@ -8,8 +8,10 @@ from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.utils.response import response_status_message
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
-from . import proxy
+from .utils import proxy
 import random
+import json
+import os
 
 class NbaCrawlerSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -120,10 +122,16 @@ class RandomUserAgent(object):
 
 class ProxyMiddlerware:
     
+    
     def process_request(self, request, spider):
-        request.meta['proxy'] = proxy.get_proxy()
+        # request.meta['proxy'] = proxy.get_proxy()
+        request.meta['proxy'] = 'http://127.0.0.1:7890'
     
 class ProxyRetryMiddleware(RetryMiddleware):
+
+    def __init__(self, settings):
+        super().__init__(settings)
+        self.failed_path = settings.get('DATA_DIR')
 
     def process_response(self, request, response, spider):
         if request.meta.get("dont_retry", False):
@@ -136,3 +144,9 @@ class ProxyRetryMiddleware(RetryMiddleware):
             return self._retry(request, reason, spider) or response
         return response
 
+    def _retry(self, request, reason, spider):
+        rep = super()._retry(request, reason, spider)
+        if not rep:
+            with open(os.path.join(self.failed_path,'failed_url.txt'), 'a') as f:
+                f.write(request.url+'\n')
+        return rep
