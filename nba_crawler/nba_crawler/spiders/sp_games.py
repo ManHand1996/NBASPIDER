@@ -221,9 +221,6 @@ class GameSpiderHis(NBASpider):
         """
         months = rep.xpath('//div[@id="content"]/div[@class="filter"]/div/a/@href').getall()
         for i in months:
-            # debug时，忘记去除，只爬取了april的数据
-            # 2024-01-214 获取所有数据
-            
             yield rep.follow(rep.urljoin(i), self.parse_game)
             # print(rep.urljoin(i))
             # yield rep.follow(rep.urljoin(i), self.parse_game)

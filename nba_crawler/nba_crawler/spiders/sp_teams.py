@@ -7,13 +7,15 @@ TeamSpider, TeamSpiderHis
     TeamInjuryItem: 球队伤病球员名单
     TeamItem: 各球队信息
 """
-
+import logging
 from scrapy import Request
+from scrapy.http import Request
 from scrapy.http.response.html import HtmlResponse
 from typing import Any, Iterable
+from nba_crawler.items import TeamPerGame
 
 from nba_crawler.utils.basespider import NBASpider
-
+# logger = logging.getLogger()
 class TeamSpider(NBASpider):
     """当前赛季
     """
@@ -69,3 +71,18 @@ class TeamSpiderHis(NBASpider):
             conference = i.xpath('../../../../@id').get()[-1]
             conference = 'Eastern' if conference == 'E' else 'Western'
             yield rep.follow(rep.urljoin(i.attrib['href']), self.parse_team, meta={'conference': conference})
+            
+
+class TestNBA(NBASpider):
+    name = 'TestNBA'
+    
+    def start_requests(self) -> Iterable[Request]:
+        for i in range(1980, 2024):
+            yield Request(f'https://www.basketball-reference.com/leagues/NBA_{i}.html', callback=self.test_parse)
+        
+    
+    def test_parse(self, rep: HtmlResponse):
+        # self.logger.info('TEST LOGGING')
+        # yield TeamPerGame(**{'team': 'FOO'})
+        # yield TeamPerGame(**{''})
+        print(rep.status)

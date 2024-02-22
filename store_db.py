@@ -10,12 +10,14 @@ import sqlite3
 import json
 import pandas as pd
 from typing import List, Literal
-from nba_crawler.global_settings import REDIS_UPDATE_GAME_KEY, REDIS_UPDATE_PLAYER_KEY
+
 
 BASE_PATH = os.path.dirname(__file__)
 DB_PATH_HISTORY = os.path.join(BASE_PATH,'data', 'nba_data_history.db')
 DB_PATH = os.path.join(BASE_PATH, 'data', 'nba_data.db')
 NBA_CRAWLER_PATH = os.path.join(BASE_PATH, 'nba_crawler', 'nba_crawler') # 爬虫项目路径
+REDIS_UPDATE_GAME_KEY = 'update_games'
+REDIS_UPDATE_PLAYER_KEY = 'tb_all_player'
 REDIS_URL = 'redis://127.0.0.1:6379'
 REDIS_MAX_POP = 100000
 

@@ -4,6 +4,7 @@
 返回的不一定可以使用
 """
 import requests
+from requests.exceptions import Timeout
 import re
 from json import JSONDecodeError
 import socket, socks
@@ -22,7 +23,7 @@ def get_proxy():
         proxy_obj = requests.get("http://127.0.0.1:5010/get/", proxies={}, timeout=1).json()
         proxy_prefix = 'http://'
         return proxy_prefix + proxy_obj['proxy']
-    except JSONDecodeError:
+    except (JSONDecodeError,Timeout):
         return DEFAULT_PROXY
 
 def delete_proxy(proxy: str):

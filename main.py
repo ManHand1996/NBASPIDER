@@ -15,3 +15,10 @@ if birth_date.year < today.year:
     days = (today - temp_date).days
     print(days)
 
+
+with open('D:\\Projects\\PersonProject\\NBASpirder\\nba_crawler\\logs\\nba_crawler\\TeamSpider\\08f5f783c73711ee84416c5d3a062bef.log', 'r') as f:
+    s = f.read()
+    mt = re.search(r'(?s:.*)ProcessStatus\:response\:(\d+), request\:(\d+)', s)
+    if mt:
+        print(eval(mt.groups()[0]+ '/' + mt.groups()[1]) * 100)
+    

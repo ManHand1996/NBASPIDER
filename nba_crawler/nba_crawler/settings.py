@@ -69,6 +69,7 @@ DOWNLOAD_DELAY = 2.5
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
+    "nba_crawler.middlewares.ProcessStatusMiddleware": 399,
    "nba_crawler.middlewares.RandomUserAgent": 400,
    "nba_crawler.middlewares.ProxyMiddlerware": 402,
    "nba_crawler.middlewares.ProxyRetryMiddleware": 403
@@ -118,13 +119,15 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
 # SQLITE_DB = 'nba_data.db'
-RETRY_TIMES = 10
+RETRY_TIMES = 1
 DOWNLOAD_TIMEOUT = 15
 REDIS_URL = 'redis://localhost:6379'
 
-# spider failure URL stored in DATA_DIR
+# spider LOG_PATH
 BASE_PATH = os.path.dirname(__file__)
-DATA_DIR = os.path.join(BASE_PATH, 'errors')
+# LOG_PATH = os.path.join(BASE_PATH, 'logs')
+# LOG_FILE = os.path.join(BASE_PATH, 'logs', 'spider.log')
+LOG_LEVEL = 'INFO'
 DEFAULT_PROXY = 'http://127.0.0.1:7890'
 
 if __name__ == '__main__':

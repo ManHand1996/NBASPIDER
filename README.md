@@ -85,16 +85,25 @@ sp_games.py:
     当前赛季 (完成)
 2.历史数据赛程只有4月份，
 
+2023-01-31:
+可视化爬虫尝试使用streamlit
+调度UI 定时运行等.查看运行状态 https://github.com/DormyMo/SpiderKeeper
 
-'2007-08': 1310, 
-'2005-06': 1310, 
-'2010-11': 1306, 
-'2013-14': 1259, 
-'2008-09': 1310, 
-'2003-04': 1241, 
-'2006-07': 1304, 
-'2002-03': 205, 
-'2011-12': 776, 
-'2009-10': 1305, 
-'2012-13': 316,
- '2004-05': 7
+# 部署: Scrapyd
+windows: needed pywin32
+在项目根目录下(scrapy.cfg目录)
+1.启动scrapyd
+2.配置scrapy.cfg, setup.py
+3.scrapyd-deploy nba_crawler -p nba_crawler
+
+需要一个process bar
+
+scrapyd 无定时功能：
+代替方法：
+celery/crontab(linux)
+
+UI相关：
+1.SCHEDULE. 
+list jobs
+list spiders
+list project

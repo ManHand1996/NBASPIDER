@@ -137,11 +137,11 @@ class PlayerSpider(NBASpider):
                     player_item['draft_year'] = search_text(r'\d+', draft_str[3])[0]
                     player_item['draft_overall'] = search_text(r'\d+', draft_str[2])[0]
                 except Exception as e:
-                    print(':',rep.url)
                     player_item['draft_team'] = draft_str[0].strip()
                     player_item['draft_round'] = search_text(r'\d+', draft_str[1])[0]
                     player_item['draft_year'] = search_text(r'\d+', draft_str[2])[0]
-                    self.spider_errors(self.__class__.__name__, f'parse_player_info() parse {e}, {rep.url}')
+                    self.logger.error(f'{e}, [{rep.url}]')
+                    # self.spider_errors(self.__class__.__name__, f'parse_player_info() parse {e}, {rep.url}')
             elif 'Experience' in item or 'Career Length' in item:
                 player_item['experience'] = search_text(r'(\d+) year(s)?', item)[0]
             elif 'Relatives' in item:
@@ -257,6 +257,7 @@ class PlayerSpiderHis(PlayerSpider):
     
     def start_requests(self) -> Iterable[Request]:
         players = self.read_player_url()
+        
         
         url_prefix = 'https://www.basketball-reference.com'
         for player in players:

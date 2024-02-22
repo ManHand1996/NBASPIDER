@@ -16,7 +16,6 @@ from itemadapter import ItemAdapter
 from nba_crawler.items import GameDetailItem, GameDetailQuaterItem
 from nba_crawler.items import TeamPerGame, TeamRosterItem, TeamInjuryItem, TeamItem
 from nba_crawler.utils.tools import element_text
-from global_settings import REDIS_UPDATE_GAME_KEY, REDIS_UPDATE_PLAYER_KEY
 
 # from .. import items
 
@@ -44,22 +43,26 @@ class NBASpider(Spider):
     """
     history = ''
     custom_settings = {
-        'REDIS_UPDATE_GAME_KEY': REDIS_UPDATE_GAME_KEY,
-        'REDIS_UPDATE_PLAYER_KEY': REDIS_UPDATE_PLAYER_KEY
+        'REDIS_UPDATE_GAME_KEY': 'update_games',
+        'REDIS_UPDATE_PLAYER_KEY': 'tb_all_player'
     }
     
-    def spider_errors(self, spider_name, info):
-        error_path = os.path.join(self.settings.get('DATA_PATH', ''), 'custom_error.txt')
-        with open(error_path, 'ab') as f:
-            info_str = f'{spider_name}: \"{info}\"\n'
-            f.write(info_str.encode('utf-8'))
+    # def spider_errors(self, spider_name, info):
+    #     error_path = os.path.join(self.settings.get('DATA_PATH', ''), 'custom_error.txt')
+    #     with open(error_path, 'ab') as f:
+    #         info_str = f'{spider_name}: \"{info}\"\n'
+    #         f.write(info_str.encode('utf-8'))
+    
     
     
     def get_season_range(self):
-        season_from = getattr(self, 'season_from', None)
-        season_to = getattr(self, 'season_from', None)
-        if not season_from or not season_to or season_to < season_from:
+        season_from = int(getattr(self, 'season_from', None))
+        season_to = int(getattr(self, 'season_from', None))
+        
+        
+        if not season_from or not season_to or season_to > season_from:
             raise CloseSpider
+        self.logger.info(f'*season:{season_from}-{season_to}*')
         return list(range(season_from, season_to+1))
     
     def get_current_season(self):
@@ -71,6 +74,8 @@ class NBASpider(Spider):
             year = cur_date.year
         else:
             raise CloseSpider('NBA offseason')
+        self.logger.info(f'*season:{year}*')
+        
         return year
     
     
